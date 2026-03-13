@@ -56,7 +56,7 @@ const mapGvamaxToProperty = (item: any): Property => {
     description: cleanHtml(item.descripcion),
     type: mapPropertyType(item.tipoInmueble || ''),
     operation: mapOperationType(item.tipoOperacion || ''),
-    price: parseFloat(String(item.precio || '0').replace(/[^0-9.]/g, '')) || 0,
+    price: parseInt(String(item.precio || '0').replace(/[^0-9]/g, '')) || 0,
     currency: item.moneda === 'P' ? 'ARS' : 'USD',
     neighborhood: item.ubicacion?.barrio || '',
     location: {
