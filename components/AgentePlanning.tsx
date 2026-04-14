@@ -164,15 +164,17 @@ const PIEZA_VACIA = {
   hashtags: [] as string[], cta: "", recursos: ""
 };
 
+const AUTH_USER = "Pintamkt";
+const AUTH_PASS = "P.intamkt2026";
+
 export default function AgentePlanning() {
   // ── Auth ──────────────────────────────────────────────────────────────
-  const [accessCode, setAccessCode] = useState(() => localStorage.getItem("pintamkt_code") || "");
-  const [codeInput, setCodeInput] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(() =>
+    localStorage.getItem("pintamkt_auth") === "ok"
+  );
+  const [userInput, setUserInput] = useState("");
+  const [passInput, setPassInput] = useState("");
   const [authError, setAuthError] = useState("");
-  const [needsCode] = useState(() => {
-    // We'll discover this on first API call; start unlocked if no code ever failed
-    return false;
-  });
 
   // ── Form ──────────────────────────────────────────────────────────────
   const [form, setForm] = useState({
@@ -197,7 +199,6 @@ export default function AgentePlanning() {
   const [view, setView] = useState("calendar");
   const [selectedPieza, setSelectedPieza] = useState<any>(null);
   const [editando, setEditando] = useState<any>(null);
-  const [showAuthScreen, setShowAuthScreen] = useState(false);
 
   // ── Persistencia ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -409,21 +410,11 @@ Insights del mes anterior: ${form.reporteAnterior || "No disponible"}
 Genera el planning mensual completo para 4 semanas. Distribuí las piezas en días específicos de la semana (Lunes a Viernes principalmente). Cada pieza debe tener guion de producción detallado (mínimo 3 oraciones), copy completo con emojis y CTA específico.`;
 
     try {
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (accessCode) headers["x-access-code"] = accessCode;
-
       const response = await fetch("/api/planning", {
         method: "POST",
-        headers,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ system: SYSTEM_PROMPT, userPrompt })
       });
-
-      if (response.status === 401) {
-        setShowAuthScreen(true);
-        setStep("form");
-        setLoading(false);
-        return;
-      }
 
       const data = await response.json();
       if (data.error) throw new Error(data.error);
@@ -461,40 +452,56 @@ Genera el planning mensual completo para 4 semanas. Distribuí las piezas en dí
   const allPiezas = planning?.semanas?.flatMap((s: any) => s.piezas) || [];
   const totalPiezas = allPiezas.length;
 
-  // ── Auth Screen ───────────────────────────────────────────────────────
-  if (showAuthScreen) {
+  // ── Login Screen ─────────────────────────────────────────────────────
+  if (!isAuthenticated) {
+    const handleLogin = () => {
+      if (userInput === AUTH_USER && passInput === AUTH_PASS) {
+        localStorage.setItem("pintamkt_auth", "ok");
+        setIsAuthenticated(true);
+        setAuthError("");
+      } else {
+        setAuthError("Usuario o contraseña incorrectos");
+        setPassInput("");
+      }
+    };
     return (
       <div style={{ minHeight: "100vh", background: BK, fontFamily: "'Barlow', sans-serif", color: CR, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <style>{`@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600;700&display=swap'); * { box-sizing: border-box; }`}</style>
-        <div style={{ background: DK, border: `2px solid ${Y}`, padding: "36px 40px", maxWidth: 400, width: "100%", margin: "0 20px" }}>
-          <div style={{ background: Y, color: BK, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontSize: 18, padding: "4px 12px", display: "inline-block", marginBottom: 20 }}>🐝 PINTAMKT</div>
-          <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontSize: 28, textTransform: "uppercase", marginBottom: 8 }}>ACCESO RESTRINGIDO</div>
-          <div style={{ fontSize: 13, color: "#666", marginBottom: 24 }}>Ingresá el código de acceso para continuar.</div>
-          {authError && <div style={{ background: "#2A0A0A", border: "2px solid #E1306C", color: "#E1306C", padding: "10px 14px", marginBottom: 16, fontSize: 13 }}>{authError}</div>}
-          <input
-            type="password"
-            value={codeInput}
-            onChange={e => setCodeInput(e.target.value)}
-            onKeyDown={e => { if (e.key === "Enter") {
-              if (!codeInput.trim()) { setAuthError("Ingresá un código"); return; }
-              localStorage.setItem("pintamkt_code", codeInput);
-              setAccessCode(codeInput);
-              setShowAuthScreen(false);
-              setAuthError("");
-            }}}
-            placeholder="Código de acceso..."
-            style={{ width: "100%", padding: "14px 16px", background: "#0D0D0D", border: `2px solid ${GR}`, color: CR, fontFamily: "'Barlow',sans-serif", fontSize: 16, outline: "none", marginBottom: 14 }}
-            autoFocus
-          />
+        <div style={{ background: DK, border: `2px solid ${Y}`, padding: "40px 44px", maxWidth: 400, width: "100%", margin: "0 20px" }}>
+          <div style={{ background: Y, color: BK, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontSize: 18, padding: "4px 12px", display: "inline-block", marginBottom: 24 }}>🐝 PINTAMKT</div>
+          <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontSize: 30, textTransform: "uppercase", marginBottom: 4 }}>AGENTE DE PLANNING</div>
+          <div style={{ fontSize: 13, color: "#555", marginBottom: 28, fontFamily: "'Barlow',sans-serif" }}>Ingresá tus credenciales para continuar.</div>
+          {authError && (
+            <div style={{ background: "#2A0A0A", border: "2px solid #E1306C", color: "#E1306C", padding: "10px 14px", marginBottom: 18, fontSize: 13, fontWeight: 600 }}>
+              ⚠ {authError}
+            </div>
+          )}
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 10, color: "#555", fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 6 }}>USUARIO</div>
+            <input
+              type="text"
+              value={userInput}
+              onChange={e => setUserInput(e.target.value)}
+              onKeyDown={e => { if (e.key === "Enter") handleLogin(); }}
+              placeholder="Usuario"
+              style={{ width: "100%", padding: "13px 16px", background: "#0D0D0D", border: `2px solid ${GR}`, color: CR, fontFamily: "'Barlow',sans-serif", fontSize: 15, outline: "none" }}
+              autoFocus
+            />
+          </div>
+          <div style={{ marginBottom: 24 }}>
+            <div style={{ fontSize: 10, color: "#555", fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 6 }}>CONTRASEÑA</div>
+            <input
+              type="password"
+              value={passInput}
+              onChange={e => setPassInput(e.target.value)}
+              onKeyDown={e => { if (e.key === "Enter") handleLogin(); }}
+              placeholder="Contraseña"
+              style={{ width: "100%", padding: "13px 16px", background: "#0D0D0D", border: `2px solid ${GR}`, color: CR, fontFamily: "'Barlow',sans-serif", fontSize: 15, outline: "none" }}
+            />
+          </div>
           <button
-            onClick={() => {
-              if (!codeInput.trim()) { setAuthError("Ingresá un código"); return; }
-              localStorage.setItem("pintamkt_code", codeInput);
-              setAccessCode(codeInput);
-              setShowAuthScreen(false);
-              setAuthError("");
-            }}
-            style={{ width: "100%", padding: "14px", background: Y, border: "none", color: BK, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontSize: 16, letterSpacing: "0.1em", cursor: "pointer", textTransform: "uppercase" }}
+            onClick={handleLogin}
+            style={{ width: "100%", padding: "15px", background: Y, border: "none", color: BK, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontSize: 16, letterSpacing: "0.1em", cursor: "pointer", textTransform: "uppercase" }}
           >
             INGRESAR
           </button>
