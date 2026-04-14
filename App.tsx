@@ -46,6 +46,11 @@ const App: React.FC = () => {
     });
   }, []);
 
+  // Scroll to top on every view/property change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [view, selectedPropertyId]);
+
   useEffect(() => {
     const cached = getCachedProperties();
     if (cached.length > 0) {
