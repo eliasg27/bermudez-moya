@@ -528,23 +528,54 @@ const App: React.FC = () => {
     return renderHome();
   };
 
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+  const navItems = [
+    { label: 'Propiedades', action: () => { setView('home'); setSelectedPropertyId(null); } },
+    { label: 'Servicios', action: () => setView('services') },
+    { label: 'Contacto', action: () => setView('contacto') },
+    { label: 'Nosotros', action: () => setView('nosotros') },
+  ];
+
   return (
     <div className="min-h-screen bg-white">
       <nav className="bg-white sticky top-0 z-[100] border-b border-brand-border">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-24">
-          <div className="flex items-center cursor-pointer" onClick={() => {setView('home'); setSelectedPropertyId(null); setShowMap(false);}}>
-            <img src="/logo-full.png" alt="Bermudez Moya" className="h-12 w-auto object-contain" />
+          {/* Logo */}
+          <div className="flex items-center cursor-pointer" onClick={() => { setView('home'); setSelectedPropertyId(null); setShowMap(false); setMobileMenuOpen(false); }}>
+            <img src="/logo-full.png" alt="Bermudez Moya" className="h-14 w-auto object-contain" style={{maxWidth: '260px'}} />
           </div>
-          <div className="flex items-center gap-8">
-            <div className="hidden md:flex gap-8">
-               <button onClick={() => {setView('home'); setSelectedPropertyId(null);}} className={`text-xs font-bold uppercase tracking-widest transition-colors ${view === 'home' ? 'text-brand-red' : 'text-brand-gray hover:text-brand-red'}`}>Propiedades</button>
-               <button onClick={() => setView('services')} className={`text-xs font-bold uppercase tracking-widest transition-colors ${view === 'services' ? 'text-brand-red' : 'text-brand-gray hover:text-brand-red'}`}>Servicios</button>
-               <button onClick={() => setView('contacto')} className={`text-xs font-bold uppercase tracking-widest transition-colors ${view === 'contacto' ? 'text-brand-red' : 'text-brand-gray hover:text-brand-red'}`}>Contacto</button>
-               <button onClick={() => setView('nosotros')} className={`text-xs font-bold uppercase tracking-widest transition-colors ${view === 'nosotros' ? 'text-brand-red' : 'text-brand-gray hover:text-brand-red'}`}>Nosotros</button>
-            </div>
+
+          {/* Desktop menu */}
+          <div className="hidden md:flex items-center gap-8">
+            {navItems.map(item => (
+              <button key={item.label} onClick={item.action} className={`text-xs font-bold uppercase tracking-widest transition-colors ${view !== 'admin' && item.label === 'Propiedades' && view === 'home' ? 'text-brand-red' : 'text-brand-gray hover:text-brand-red'}`}>{item.label}</button>
+            ))}
             <button onClick={handleAdminAccess} className={`text-[10px] font-bold uppercase tracking-widest px-5 py-2.5 rounded-xl transition-all border-2 ${view === 'admin' ? 'bg-brand-black text-white border-brand-black' : 'bg-transparent border-brand-black text-brand-black hover:bg-brand-black hover:text-white'}`}>Panel Admin</button>
           </div>
+
+          {/* Mobile hamburger */}
+          <button className="md:hidden p-2 rounded-xl text-brand-black hover:bg-slate-50 transition-colors" onClick={() => setMobileMenuOpen(o => !o)}>
+            {mobileMenuOpen
+              ? <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              : <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            }
+          </button>
         </div>
+
+        {/* Mobile dropdown menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-white border-t border-brand-border px-4 py-4 space-y-1 shadow-lg">
+            {navItems.map(item => (
+              <button key={item.label} onClick={() => { item.action(); setMobileMenuOpen(false); }} className="w-full text-left px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest text-brand-gray hover:bg-slate-50 hover:text-brand-red transition-colors">
+                {item.label}
+              </button>
+            ))}
+            <button onClick={() => { handleAdminAccess(); setMobileMenuOpen(false); }} className="w-full text-left px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest text-brand-black hover:bg-brand-black hover:text-white transition-colors border-2 border-brand-black mt-2">
+              Panel Admin
+            </button>
+          </div>
+        )}
       </nav>
       <main className="pb-20">{renderContent()}</main>
       <footer className="bg-brand-black text-brand-gray py-24">
