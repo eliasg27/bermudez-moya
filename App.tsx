@@ -1,6 +1,7 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Property, PropertyType, OperationType, User, UserRole } from './types';
+import AgentePlanning from './components/AgentePlanning';
 import { getCachedProperties, syncWithGvamax } from './services/syncService';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -19,6 +20,10 @@ type ViewType = 'home' | 'services' | 'admin' | 'nosotros' | 'contacto';
 type SortOption = 'newest' | 'oldest' | 'price-asc' | 'price-desc';
 
 const App: React.FC = () => {
+  if (window.location.pathname === '/planning') {
+    return <AgentePlanning />;
+  }
+
   const [view, setView] = useState<ViewType>('home');
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
