@@ -1,11 +1,6 @@
 
 import { saveLeadLocally } from './leadStorageService';
 
-const GVAMAX_API = 'https://gvamax.ar/Api/v3';
-const GVAMAX_TOKEN = 'b495ce63ede0f4efc9eec62cb947c162';
-const GVAMAX_ID = '1253';
-const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
-
 export interface LeadData {
   nombre: string;
   apellido: string;
@@ -49,7 +44,6 @@ export const sendLeadToGvamax = async (lead: LeadData): Promise<boolean> => {
 
   // 2. Enviar notificación al admin + confirmación al usuario (no bloquean)
   sendEmailNotification(lead, lead.inmueble);
-  // Confirmación al usuario
   fetch('/api/send-confirmation', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -61,11 +55,9 @@ export const sendLeadToGvamax = async (lead: LeadData): Promise<boolean> => {
     }),
   }).catch(() => {/* non-blocking */});
 
-  // 3. Enviar a Gvamax CRM
+  // 3. Enviar a Gvamax CRM via endpoint interno (sin proxy externo)
   try {
     const params = new URLSearchParams({
-      token: GVAMAX_TOKEN,
-      id: GVAMAX_ID,
       nombre: lead.nombre,
       apellido: lead.apellido,
       celular: lead.celular,
@@ -81,15 +73,13 @@ export const sendLeadToGvamax = async (lead: LeadData): Promise<boolean> => {
       params.append('inmueble', lead.inmueble);
     }
 
-    const apiUrl = `${GVAMAX_API}/crm/addlead?${params.toString()}`;
-    const url = `${CORS_PROXY}${encodeURIComponent(apiUrl)}`;
-    const response = await fetch(url);
-    if (!response.ok) return true; // ya guardamos local, igual es éxito para el usuario
+    const response = await fetch(`/api/addlead?${params.toString()}`);
+    if (!response.ok) return true;
 
     const data = await response.json();
     return String(data.status) === '200';
   } catch (error) {
     console.error('Error sending lead to Gvamax:', error);
-    return true; // ya guardamos local
+    return true;
   }
 };
