@@ -532,25 +532,8 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-white">
       <nav className="bg-white sticky top-0 z-[100] border-b border-brand-border">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-24">
-          <div className="flex items-center gap-4 cursor-pointer" onClick={() => {setView('home'); setSelectedPropertyId(null); setShowMap(false);}}>
-            <div style={{
-              width: '44px',
-              height: '44px', 
-              backgroundColor: '#C21C28',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: "'Barlow', sans-serif",
-              fontWeight: 900,
-              fontSize: '18px',
-              color: 'white',
-              letterSpacing: '-1px'
-            }}>BM</div>
-            <div>
-              <div style={{fontFamily:"'Barlow',sans-serif", fontWeight:900, fontSize:'16px', color:'#1D1D1B', letterSpacing:'2px'}}>BERMUDEZ MOYA</div>
-              <div style={{fontFamily:"'Barlow',sans-serif", fontWeight:300, fontSize:'10px', color:'#4C4C4C', letterSpacing:'3px'}}>GESTIÓN INMOBILIARIA</div>
-            </div>
+          <div className="flex items-center cursor-pointer" onClick={() => {setView('home'); setSelectedPropertyId(null); setShowMap(false);}}>
+            <img src="/logo-full.png" alt="Bermudez Moya" className="h-12 w-auto object-contain" />
           </div>
           <div className="flex items-center gap-8">
             <div className="hidden md:flex gap-8">
@@ -567,25 +550,8 @@ const App: React.FC = () => {
       <footer className="bg-brand-black text-brand-gray py-24">
         <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-4 gap-20">
           <div className="col-span-1 md:col-span-2 space-y-8">
-              <div className="flex items-center gap-4">
-                <div style={{
-                  width: '44px',
-                  height: '44px', 
-                  backgroundColor: '#C21C28',
-                  borderRadius: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontFamily: "'Barlow', sans-serif",
-                  fontWeight: 900,
-                  fontSize: '18px',
-                  color: 'white',
-                  letterSpacing: '-1px'
-                }}>BM</div>
-                <div>
-                  <div style={{fontFamily:"'Barlow',sans-serif", fontWeight:900, fontSize:'16px', color:'white', letterSpacing:'2px'}}>BERMUDEZ MOYA</div>
-                  <div style={{fontFamily:"'Barlow',sans-serif", fontWeight:300, fontSize:'10px', color:'rgba(255,255,255,0.6)', letterSpacing:'3px'}}>GESTIÓN INMOBILIARIA</div>
-                </div>
+              <div className="flex items-center">
+                <img src="/logo-full.png" alt="Bermudez Moya" className="h-10 w-auto object-contain brightness-0 invert" />
               </div>
               <p className="max-w-md text-lg leading-relaxed font-light">Innovación inmobiliaria con las mejores propiedades de San Juan y la región.</p>
           </div>
