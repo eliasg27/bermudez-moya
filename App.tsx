@@ -583,7 +583,7 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-4 gap-20">
           <div className="col-span-1 md:col-span-2 space-y-8">
               <div className="flex items-center">
-                <img src="/logo-full.png" alt="Bermudez Moya" className="h-10 w-auto object-contain brightness-0 invert" />
+                <img src="/logo-full.png" alt="Bermudez Moya" className="h-20 w-auto object-contain brightness-0 invert" />
               </div>
               <p className="max-w-md text-lg leading-relaxed font-light">Innovación inmobiliaria con las mejores propiedades de San Juan y la región.</p>
           </div>
