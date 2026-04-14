@@ -540,11 +540,11 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <nav className="bg-white sticky top-0 z-[100] border-b border-brand-border">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-24">
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-20 md:h-40">
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={() => { setView('home'); setSelectedPropertyId(null); setShowMap(false); setMobileMenuOpen(false); }}>
-            <img src="/logo-full.png" alt="Bermudez Moya" className="hidden md:block h-36 w-auto object-contain" style={{maxWidth: '520px'}} />
-            <img src="/logo-full.png" alt="Bermudez Moya" className="md:hidden h-28 w-auto object-contain" style={{maxWidth: '420px'}} />
+            <img src="/logo-full.png" alt="Bermudez Moya" className="hidden md:block" style={{width:'340px', height:'90px', objectFit:'cover', objectPosition:'center center'}} />
+            <img src="/logo-full.png" alt="Bermudez Moya" className="md:hidden" style={{width:'200px', height:'52px', objectFit:'cover', objectPosition:'center center'}} />
           </div>
 
           {/* Desktop menu */}
