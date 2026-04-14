@@ -543,7 +543,7 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-24">
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={() => { setView('home'); setSelectedPropertyId(null); setShowMap(false); setMobileMenuOpen(false); }}>
-            <img src="/logo-full.png" alt="Bermudez Moya" className="h-20 w-auto object-contain" style={{maxWidth: '320px'}} />
+            <img src="/logo-full.png" alt="Bermudez Moya" className="h-28 w-auto object-contain" style={{maxWidth: '420px'}} />
           </div>
 
           {/* Desktop menu */}
