@@ -540,11 +540,10 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <nav className="bg-white sticky top-0 z-[100] border-b border-brand-border">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-20 md:h-40">
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-24">
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={() => { setView('home'); setSelectedPropertyId(null); setShowMap(false); setMobileMenuOpen(false); }}>
-            <img src="/logo-full.png" alt="Bermudez Moya" className="hidden md:block" style={{width:'340px', height:'90px', objectFit:'cover', objectPosition:'center center'}} />
-            <img src="/logo-full.png" alt="Bermudez Moya" className="md:hidden" style={{width:'200px', height:'52px', objectFit:'cover', objectPosition:'center center'}} />
+            <img src="/logo_berm_svg.svg" alt="Bermudez Moya Gestión Inmobiliaria" style={{ height: '56px', width: 'auto', objectFit: 'contain' }} />
           </div>
 
           {/* Desktop menu */}
@@ -583,7 +582,7 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-4 gap-20">
           <div className="col-span-1 md:col-span-2 space-y-8">
               <div className="flex items-center">
-                <img src="/logo-full.png" alt="Bermudez Moya" className="h-40 w-auto object-contain brightness-0 invert" />
+                <img src="/logo_berm_svg_blanco.svg" alt="Bermudez Moya Gestión Inmobiliaria" style={{ height: '52px', width: 'auto', objectFit: 'contain' }} />
               </div>
               <p className="max-w-md text-lg leading-relaxed font-light">Innovación inmobiliaria con las mejores propiedades de San Juan y la región.</p>
           </div>
