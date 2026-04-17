@@ -336,6 +336,10 @@ const App: React.FC = () => {
                 <h3 className="text-2xl font-black text-brand-black mb-6">Descripción</h3>
                 <p className="text-brand-gray text-lg leading-relaxed whitespace-pre-line">{selectedProperty.description}</p>
               </div>
+              {/* Formulario mobile — visible solo en pantallas menores a lg */}
+              <div className="mt-10 lg:hidden">
+                <StickyContactSidebar property={selectedProperty} />
+              </div>
             </div>
             <div className="hidden lg:block relative"><StickyContactSidebar property={selectedProperty} /></div>
           </div>
